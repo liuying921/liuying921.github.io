@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开源软件国内镜像加速站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft Yahei", sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .desc {
+            color: #666;
+            font-size: 16px;
+        }
+        .notice {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #2980b9;
+        }
+        .item {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .info p {
+            color: #777;
+            font-size: 14px;
+        }
+        .btn {
+            background: #3498db;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #999;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>开源软件国内镜像加速站</h1>
+            <p class="desc">解决国外开源软件下载慢、超时、无法连接问题</p>
+        </header>
+
+        <div class="notice">
+            【合规声明】本站所有资源均为开源免费软件，遵循对应开源协议(GPL/MIT/Apache等)，仅作国内下载加速镜像使用，所有版权归原开发者所有，无任何商业用途。
+        </div>
+
+        <!-- 镜像软件列表 你在这里随便加 -->
+        <div class="item">
+            <div class="info">
+                <h3>Blender 三维建模渲染</h3>
+                <p>开源免费三维创作软件，建模、渲染、动画、雕刻全能</p>
+            </div>
+            <a href="blender.exe" download class="btn">本地高速下载</a>
+        </div>
+
+        <div class="item">
+            <div class="info">
+                <h3>OBS Studio 直播推流录屏</h3>
+                <p>开源免费录屏、直播推流工具，无水印无限制</p>
+            </div>
+            <a href="obs.exe" download class="btn">本地高速下载</a>
+        </div>
+
+        <div class="item">
+            <div class="info">
+                <h3>Python 编程环境</h3>
+                <p>Python 官方开源安装包，国内加速下载</p>
+            </div>
+            <a href="python.exe" download class="btn">本地高速下载</a>
+        </div>
+
+        <div class="item">
+            <div class="info">
+                <h3>FFmpeg 音视频处理工具</h3>
+                <p>全能开源音视频转码、剪辑、处理命令行工具</p>
+            </div>
+            <a href="ffmpeg.zip" download class="btn">本地高速下载</a>
+        </div>
+        <!-- 你想加多少软件，直接复制上面一块改名字和文件就行 -->
+
+        <footer>
+            © 2026 个人开源镜像加速站 | 仅开源资源加速分享
+        </footer>
+    </div>
+</body>
+</html>
