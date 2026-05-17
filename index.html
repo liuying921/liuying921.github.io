@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全能格式转换器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", sans-serif;
+        }
+        body {
+            background: #f2f3f5;
+            padding: 20px 15px;
+        }
+        .main-box {
+            max-width: 520px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 1px 8px #ddd;
+        }
+        h3 {
+            color: #222;
+            margin: 30px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #eee;
+        }
+        h3:first-of-type {
+            margin-top: 0;
+        }
+        .item {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1677ff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        button:active {
+            background: #0958d9;
+        }
+        .preview-img {
+            max-width: 180px;
+            margin: 10px 0;
+            display: none;
+        }
+        .tip-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        /* 广告预留样式 */
+        .ad_splash_box{
+            width:100%;
+            height:100vh;
+            position:fixed;
+            top:0;
+            left:0;
+            background:#fff;
+            z-index:9999;
+            display:none;
+        }
+        .ad_banner_box{
+            width:100%;
+            height:80px;
+            line-height:80px;
+            text-align:center;
+            background:#f8f8f8;
+            border-radius:8px;
+            margin:20px 0;
+            display:none;
+        }
+
+        /* 隐私协议弹窗样式 */
+        .privacy-pop{
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .pop-inner{
+            background: #fff;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+        .pop-title{
+            font-size: 17px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .pop-desc{
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .pop-btn-box{
+            display: flex;
+            gap: 10px;
+        }
+        .pop-btn{
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            font-size: 15px;
+        }
+        .refuse-btn{
+            background: #eee;
+            color: #333;
+        }
+        .agree-btn{
+            background: #1677ff;
+            color: #fff;
+        }
+        .hide{
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<!-- 隐私协议弹窗 首次打开必弹 -->
+<div class="privacy-pop" id="privacyPop">
+    <div class="pop-inner">
+        <div class="pop-title">用户服务与隐私告知</div>
+        <div class="pop-desc">
+            欢迎使用全能格式转换器！<br>
+            本软件由【自由创作者】开发，所有文件转换均在手机本地完成，不会上传您任何私人文件。
+            应用仅获取设备标识用于广告展示，您可放心使用。
+            点击同意即代表您认可相关使用规则，拒绝将退出应用。
+        </div>
+        <div class="pop-btn-box">
+            <button class="pop-btn refuse-btn" onclick="refuseUse()">拒绝</button>
+            <button class="pop-btn agree-btn" onclick="agreeUse()">同意</button>
+        </div>
+    </div>
+</div>
+
+<!-- 预留穿山甲开屏广告位 -->
+<div class="ad_splash_box" id="splashAd"></div>
+
+<div class="main-box">
+    <!-- 图片转换 -->
+    <h3>图片格式转换</h3>
+    <div class="item">
+        <label>选择图片文件</label>
+        <input type="file" id="imgFile" accept="image/*">
+    </div>
+    <div class="item">
+        <label>转换目标格式</label>
+        <select id="imgType">
+            <option value="png">PNG 透明图</option>
+            <option value="jpeg">JPG 普通图片</option>
+            <option value="webp">WebP 高清压缩</option>
+            <option value="bmp">BMP 位图</option>
+            <option value="ico">ICO 桌面图标</option>
+            <option value="gif">GIF 动图</option>
+        </select>
+    </div>
+    <img class="preview-img" id="imgPre">
+    <button onclick="runImgConvert()">开始转换并下载</button>
+
+    <!-- 预留穿山甲横幅广告位 -->
+    <div class="ad_banner_box" id="bannerAd"></div>
+
+    <!-- 音频转换 -->
+    <h3>音频格式转换</h3>
+    <div class="item">
+        <label>选择音频文件</label>
+        <input type="file" id="audioFile" accept="audio/*">
+    </div>
+    <div class="item">
+        <label>转换目标格式</label>
+        <select id="audioType">
+            <option value="mp3">MP3 通用音频</option>
+            <option value="wav">WAV 无损音质</option>
+            <option value="ogg">OGG 轻量音频</option>
+            <option value="flac">FLAC 无损音乐</option>
+            <option value="m4a">M4A 苹果音频</option>
+        </select>
+    </div>
+    <button onclick="runAudioConvert()">音频一键转换</button>
+
+    <!-- 视频转换 -->
+    <h3>视频格式转换</h3>
+    <div class="item">
+        <label>选择视频文件</label>
+        <input type="file" id="videoFile" accept="video/*">
+    </div>
+    <div class="item">
+        <label>转换目标格式</label>
+        <select id="videoType">
+            <option value="mp4">MP4 全网通用</option>
+            <option value="webm">WebM 网页视频</option>
+            <option value="mov">MOV 苹果视频</option>
+            <option value="mkv">MKV 高清封装</option>
+            <option value="gif">GIF 视频转动图</option>
+        </select>
+    </div>
+    <button onclick="runVideoConvert()">视频一键转换</button>
+
+    <p class="tip-text">纯本地前端运行 · 无服务器 · 无端口 · 纯净无广告</p>
+</div>
+
+<script>
+// 本地存储标记，只首次弹出协议
+let isAgree = localStorage.getItem('appAgreeRule');
+const popDom = document.getElementById('privacyPop');
+
+// 拒绝直接退出APP
+function refuseUse(){
+    plus.runtime.quit();
+}
+// 同意关闭弹窗，记录状态
+function agreeUse(){
+    localStorage.setItem('appAgreeRule','1');
+    popDom.classList.add('hide');
+}
+// 已经同意过直接隐藏弹窗
+if(isAgree === '1'){
+    popDom.classList.add('hide');
+}
+
+// 图片转换功能
+let selectImg = null;
+document.getElementById('imgFile').onchange = function(e){
+    selectImg = e.target.files[0];
+    if(!selectImg) return;
+    let url = URL.createObjectURL(selectImg);
+    let pre = document.getElementById('imgPre');
+    pre.src = url;
+    pre.style.display = 'block';
+}
+
+function runImgConvert(){
+    if(!selectImg){
+        alert("请先选择一张图片！");
+        return;
+    }
+    let target = document.getElementById('imgType').value;
+    let reader = new FileReader();
+    reader.readAsDataURL(selectImg);
+    reader.onload = function(e){
+        let img = new Image();
+        img.src = e.target.result;
+        img.onload = function(){
+            let canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(img,0,0);
+            let mineType = "image/" + target;
+            canvas.toBlob(function(blob){
+                let a = document.createElement("a");
+                let fileName = selectImg.name.split(".")[0] + "." + target;
+                a.href = URL.createObjectURL(blob);
+                a.download = fileName;
+                a.click();
+                alert("图片转换成功，已自动下载！");
+            },mineType,0.9);
+        }
+    }
+}
+
+// 音视频预留入口
+function runAudioConvert(){
+    alert("音频转换功能后续更新上线");
+}
+function runVideoConvert(){
+    alert("视频转换功能后续更新上线");
+}
+</script>
+</body>
+</html>
