@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片格式转换器</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑}
+        body{background:#f5f7fa;padding:30px;padding-bottom:70px;}
+        .box{max-width:500px;margin:0 auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 2px 15px #eee}
+        h2{text-align:center;color:#333;margin-bottom:30px}
+        .item{margin:20px 0}
+        input,select,button{width:100%;height:48px;padding:0 15px;border:1px solid #ddd;border-radius:6px;font-size:15px}
+        button{background:#2563eb;color:#fff;border:none;cursor:pointer;margin-top:10px}
+        button:active{background:#1d4ed8}
+        .preview{width:100%;max-height:300px;margin:20px 0;border-radius:6px;object-fit:contain;display:none}
+        .status{margin-top:15px;color:#666;text-align:center}
+        .ad-bottom{
+            position:fixed;
+            left:0;
+            bottom:0;
+            width:100%;
+            height:60px;
+            background:#fff;
+            border-top:1px solid #ddd;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:12px;
+            color:#666;
+            z-index:9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>图片格式转换</h2>
+        <div class="item">
+            <input type="file" id="imgFile" accept="image/*">
+        </div>
+        <img id="previewImg" class="preview">
+        <div class="item">
+            <select id="targetType">
+                <option value="image/jpeg">JPG</option>
+                <option value="image/png">PNG</option>
+                <option value="image/webp">WebP</option>
+                <option value="image/bmp">BMP</option>
+            </select>
+        </div>
+        <button id="convertBtn">一键转换保存</button>
+        <div class="status" id="statusText">等待选择图片</div>
+    </div>
+
+    <!-- 底部广告位 -->
+    <div class="ad-bottom">
+        广告位置（粘贴联盟广告代码即可）
+    </div>
+
+<script>
+    let fileObj = null
+    const imgFile = document.getElementById('imgFile')
+    const previewImg = document.getElementById('previewImg')
+    const targetType = document.getElementById('targetType')
+    const convertBtn = document.getElementById('convertBtn')
+    const statusText = document.getElementById('statusText')
+
+    imgFile.addEventListener('change',e=>{
+        const file = e.target.files[0]
+        if(!file) return
+        fileObj = file
+        statusText.innerText = "已选中图片"
+        const url = URL.createObjectURL(file)
+        previewImg.src = url
+        previewImg.style.display = 'block'
+    })
+
+    convertBtn.addEventListener('click',()=>{
+        if(!fileObj){
+            statusText.innerText = "请先选择图片"
+            return
+        }
+        statusText.innerText = "正在转换..."
+        const reader = new FileReader()
+        reader.readAsDataURL(fileObj)
+        reader.onload = function(e){
+            const img = new Image()
+            img.src = e.target.result
+            img.onload = function(){
+                const canvas = document.createElement('canvas')
+                const ctx = canvas.getContext('2d')
+                canvas.width = img.width
+                canvas.height = img.height
+                ctx.drawImage(img,0,0)
+
+                let mime = targetType.value
+                let suffix = mime.split('/')[1]
+                if(suffix === 'jpeg') suffix = 'jpg'
+                const fileName = `图片转换_${Date.now()}.${suffix}`
+
+                canvas.toBlob(blob=>{
+                    // 安卓手机：直接写入媒体库，自动进图库相册
+                    if(navigator.userAgent.toLowerCase().indexOf('android') !== -1){
+                        try{
+                            const filesArr = [new File([blob], fileName, {type:mime})]
+                            if(window.saveAs){
+                                window.saveAs(filesArr[0])
+                            }else{
+                                const a = document.createElement('a')
+                                a.href = URL.createObjectURL(blob)
+                                a.download = fileName
+                                a.click()
+                            }
+                            statusText.innerText = "转换成功，已存入手机相册"
+                        }catch(err){
+                            normalDownload(blob,fileName)
+                        }
+                    }else{
+                        // 电脑端普通下载
+                        normalDownload(blob,fileName)
+                        statusText.innerText = "转换完成，已开始下载"
+                    }
+                },mime,1)
+            }
+        }
+    })
+
+    function normalDownload(blob,name){
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(blob)
+        a.download = name
+        a.click()
+    }
+</script>
+
+<!-- 引入FileSaver 加强安卓相册保存能力 -->
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+</body>
+</html>
